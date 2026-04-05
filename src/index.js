@@ -5,7 +5,15 @@ const createSchema = require('./schema');
 const seed = require('./seed');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:4200',
+    'http://localhost:4173',
+    'https://prabha-frontend.vercel.app',
+    process.env.FRONTEND_URL,
+  ].filter(Boolean),
+  credentials: true
+}));
 app.options('*', cors());
 app.use(express.json());
 

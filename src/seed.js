@@ -213,6 +213,16 @@ async function seed() {
   try {
     await createSchema();
 
+    // Check if already seeded
+    const { rows } = await pool.query('SELECT COUNT(*) as count FROM products');
+    if (parseInt(rows[0].count) > 0) {
+      console.log('✅ Database already seeded, skipping...');
+      await pool.end();
+      return;
+    }
+
+    console.log('🌱 Seeding database...');
+
     // Admin user
     const adminHash = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'Admin@123', 10);
     await pool.query(`

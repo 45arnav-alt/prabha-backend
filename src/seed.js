@@ -217,7 +217,6 @@ async function seed() {
     const { rows } = await pool.query('SELECT COUNT(*) as count FROM products');
     if (parseInt(rows[0].count) > 0) {
       console.log('✅ Database already seeded, skipping...');
-      await pool.end();
       return;
     }
 
@@ -310,9 +309,12 @@ async function seed() {
     console.log('Demo user: jane@example.com / User@123');
   } catch (err) {
     console.error('Seed error:', err);
-  } finally {
-    await pool.end();
   }
 }
 
-seed();
+// Only close pool if run directly (not imported)
+if (require.main === module) {
+  seed().then(() => pool.end());
+} else {
+  module.exports = seed;
+}

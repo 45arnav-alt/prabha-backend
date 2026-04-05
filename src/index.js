@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const createSchema = require('./schema');
+const seed = require('./seed');
 
 const app = express();
 app.use(cors({
@@ -29,5 +30,6 @@ app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 const PORT = process.env.PORT || 5000;
 
 createSchema()
+  .then(() => seed())
   .then(() => app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`)))
   .catch(err => { console.error('Failed to start:', err); process.exit(1); });

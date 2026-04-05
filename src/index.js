@@ -5,15 +5,8 @@ const createSchema = require('./schema');
 const seed = require('./seed');
 
 const app = express();
-app.use(cors({
-  origin: [
-    'http://localhost:4200',
-    'http://localhost:4173',
-    'https://prabha-backend-production.up.railway.app',
-    process.env.FRONTEND_URL,
-  ].filter(Boolean),
-  credentials: true
-}));
+app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
